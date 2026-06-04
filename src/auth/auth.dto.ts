@@ -27,7 +27,7 @@ export class RefreshTokenDto {
 }
 
 export class UserResponseDto {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ type: Number, example: 1 })
   id: number;
 
   @ApiProperty({ example: 'henrique@example.com' })
