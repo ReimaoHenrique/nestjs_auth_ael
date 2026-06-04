@@ -65,10 +65,11 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # Terraform
 # ==========================================
 # Ignora a pasta de plugins e provedores
-.terraform/
+.terraform/terraform.tfvars
 
 *.tfstate
 *.tfstate.backup
 *.tfstate.lock.info
 terraform.tfvars
 crash.log
+.vercel

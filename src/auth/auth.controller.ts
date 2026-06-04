@@ -8,14 +8,10 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiUnauthorizedResponse, ApiExtraModels } from '@nestjs/swagger';
+
+
+
 import { AuthService } from './auth.service';
 import {
   AccessTokenDto,
@@ -29,6 +25,7 @@ import {
 import { JwtAuthGuard } from './jwt-auth.guard';
 import type { AuthenticatedRequest } from './jwt-auth.guard';
 
+@ApiExtraModels(UserResponseDto)
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -36,7 +33,7 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: 'Cria um usuario com senha usando Argon2id' })
-  @ApiCreatedResponse({ type: UserResponseDto })
+  @ApiCreatedResponse({ type: () => UserResponseDto })
   register(@Body() dto: RegisterDto) {
     return this.authService.register(dto);
   }
@@ -70,7 +67,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Retorna o usuario autenticado pelo access token' })
-  @ApiOkResponse({ type: UserResponseDto })
+  @ApiOkResponse({ type: () => UserResponseDto })
   @ApiUnauthorizedResponse({ description: 'Invalid token' })
   me(@Req() request: AuthenticatedRequest) {
     return this.authService.me(request.user.id);

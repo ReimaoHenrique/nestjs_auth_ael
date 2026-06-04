@@ -1,5 +1,5 @@
 {
-  "name": "ael_auth",
+  "name": "ael_auth_nestjs",
   "version": "2.0.2",
   "private": true,
   "license": "private",
@@ -38,7 +38,8 @@
     "jsonwebtoken": "^9.0.2",
     "prisma": "6.18.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "vercel": "^54.7.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
