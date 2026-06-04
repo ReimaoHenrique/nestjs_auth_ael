@@ -1,0 +1,44 @@
+### Register User (Local)
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "teste@abc.com",
+  "password": "123456",
+  "name": "Usuário Teste"
+}
+
+### Register User (Produção)
+POST https://ael-auth.vercel.app/auth/register
+Content-Type: application/json
+
+{
+  "email": "teste@abc.com",
+  "password": "123456",
+  "name": "Usuário Teste"
+}
+
+### Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "teste@abc.com",
+  "password": "123456"
+}
+
+### Login (Produção)
+POST https://ael-auth.vercel.app/auth/login
+Content-Type: application/json
+
+{
+  "email": "teste@abc.com",
+  "password": "123456"
+}
+### 
+POST https://ael-auth.vercel.app/auth/refresh
+Content-Type: application/json  
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJpYXQiOjE3NzE0NjAyNzQsImV4cCI6MTc3MjA2NTA3NH0.cE2bpI5VPLCXEnfiCgYkSElSXO1nqnPxd5kMLILwbfI"
+}
