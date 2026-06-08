@@ -29,3 +29,84 @@ model RefreshToken {
   @@index([userId])
   @@index([token])
 }
+
+enum TransactionType {
+  RECEITA
+  DESPESA
+}
+
+enum TransactionStatus {
+  PAGO
+  PENDENTE
+  ATRASADO
+  CANCELADO
+}
+
+enum CostCenterType {
+  ADMINISTRATIVO
+  OPERACIONAL
+  VENDA
+}
+
+enum PersonType {
+  CLIENTE
+  FORNECEDOR
+  AMBOS
+}
+
+model Category {
+  id           String                 @id @default(uuid())
+  nome         String
+  tipo         TransactionType
+  descricao    String?
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+  transactions FinancialTransaction[]
+}
+
+model CostCenter {
+  id           String                 @id @default(uuid())
+  nome         String
+  tipo         CostCenterType
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+  transactions FinancialTransaction[]
+}
+
+model Person {
+  id           String                 @id @default(uuid())
+  nome         String
+  documento    String?
+  email        String?
+  telefone     String?
+  tipo         PersonType
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+  transactions FinancialTransaction[]
+}
+
+model FinancialTransaction {
+  id              String            @id @default(uuid())
+  descricao       String
+  tipo            TransactionType
+  valor           Decimal           @db.Decimal(10, 2)
+  competencia     DateTime
+  dataVencimento  DateTime
+  dataPagamento   DateTime?
+  status          TransactionStatus @default(PENDENTE)
+  formaPagamento  String?
+  origem          String            @default("MANUAL")
+  observacao      String?
+  comprovanteUrl  String?
+  chaveNfe        String?
+  centroDeCustoId String
+  categoriaId     String
+  pessoaId        String
+  contratoFixoId  String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  categoria     Category   @relation(fields: [categoriaId], references: [id])
+  centroDeCusto CostCenter @relation(fields: [centroDeCustoId], references: [id])
+  pessoa        Person     @relation(fields: [pessoaId], references: [id])
+}
