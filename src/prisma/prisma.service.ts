@@ -16,6 +16,22 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.client.refreshToken;
   }
 
+  get category() {
+    return this.client.category;
+  }
+
+  get costCenter() {
+    return this.client.costCenter;
+  }
+
+  get person() {
+    return this.client.person;
+  }
+
+  get financialTransaction() {
+    return this.client.financialTransaction;
+  }
+
   async onModuleInit() {
     await this.client.$connect();
   }
