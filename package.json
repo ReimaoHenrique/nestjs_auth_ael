@@ -10,17 +10,6 @@
     "linkedin": "@henriquereimao"
   },
   "packageManager": "pnpm@11.4.0",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@nestjs/core",
-      "@prisma/client",
-      "@prisma/engines",
-      "argon2",
-      "esbuild",
-      "prisma",
-      "unrs-resolver"
-    ]
-  },
   "scripts": {
     "build": "prisma generate && nest build",
     "vercel-build": "prisma generate",
