@@ -1,5 +1,5 @@
 [tools]
-node = "22.22.3"
+node = "24.16.0"
 pnpm = "11.4.0"
 terraform = "1.15.5"    
 gcloud = "570.0.0"

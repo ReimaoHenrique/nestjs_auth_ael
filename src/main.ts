@@ -1,20 +1,14 @@
 import { NestFactory } from '@nestjs/core';
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import express from 'express';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter(),
-  );
+  const server = express();
+  const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
 
-  app.enableCors({
-    origin: true,
-  });
+  app.enableCors({ origin: true });
 
   const config = new DocumentBuilder()
     .setTitle('API de Autenticacao - AEL')

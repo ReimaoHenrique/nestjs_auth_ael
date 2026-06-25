@@ -30,23 +30,25 @@ export class UserResponseDto {
   @ApiProperty({ type: Number, example: 1 })
   id: number;
 
-  @ApiProperty({ example: 'henrique@example.com' })
+  @ApiProperty({ type: String, example: 'henrique@example.com' })
   email: string;
 
-  @ApiProperty({ example: 'Henrique Reimao', nullable: true })
+  @ApiProperty({ type: String, example: 'Henrique Reimao', nullable: true })
   name: string | null;
 
-  @ApiProperty({ example: 'default' })
+  @ApiProperty({ type: String, example: 'default' })
   access: string;
 }
 
 export class AuthTokensDto {
   @ApiProperty({
+    type: String,
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
   })
   accessToken: string;
 
   @ApiProperty({
+    type: String,
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
   })
   refreshToken: string;
@@ -54,12 +56,13 @@ export class AuthTokensDto {
 
 export class AccessTokenDto {
   @ApiProperty({
+    type: String,
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
   })
   accessToken: string;
 }
 
 export class LogoutResponseDto {
-  @ApiProperty({ example: 'Logged out successfully' })
+  @ApiProperty({ type: String, example: 'Logged out successfully' })
   message: string;
 }
