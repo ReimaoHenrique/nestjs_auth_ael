@@ -6,7 +6,7 @@ let app;
 
 export default async function handler(req, res) {
   if (!app) {
-    const { AppModule } = await import('../dist/src/app.module');
+    const { AppModule } = require('../dist/src/app.module');
 
     app = await NestFactory.create(
       AppModule,
