@@ -1,12 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from '../src/app.module';
 
-let app: any;
+let app;
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req, res) {
   if (!app) {
+    const { AppModule } = await import('../dist/src/app.module');
+
     app = await NestFactory.create(
       AppModule,
       new ExpressAdapter(),

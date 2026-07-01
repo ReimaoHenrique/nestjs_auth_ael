@@ -13,9 +13,9 @@ model User {
   name          String?
   email         String         @unique
   password      String?
-  access        String         @default("default")
   createdAt     DateTime       @default(now())
   refreshTokens RefreshToken[]
+  tags          UserTag[]
 }
 
 model RefreshToken {
@@ -28,4 +28,19 @@ model RefreshToken {
 
   @@index([userId])
   @@index([token])
+}
+
+model Tag {
+  id    Int       @id @default(autoincrement())
+  name  String    @unique
+  users UserTag[]
+}
+
+model UserTag {
+  userId Int
+  tagId  Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([userId, tagId])
 }

@@ -14,7 +14,7 @@ export interface AuthenticatedRequest {
   user: {
     id: number;
     email: string;
-    access: string;
+    tags: string[];
   };
 }
 
@@ -38,13 +38,13 @@ export class JwtAuthGuard implements CanActivate {
       const payload = jwt.verify(token, JWT_SECRET) as unknown as {
         sub: number;
         email: string;
-        access: string;
+        tags: string[];
       };
 
       request.user = {
         id: Number(payload.sub),
         email: payload.email,
-        access: payload.access,
+        tags: payload.tags ?? [],
       };
 
       return true;

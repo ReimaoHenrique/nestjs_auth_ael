@@ -36,24 +36,59 @@ export class AuthService {
       type: argon2.argon2id,
     });
 
-    return this.prisma.user.create({
+    const tags = dto.tags?.length
+      ? await Promise.all(
+          dto.tags.map((name) =>
+            this.prisma.tag.upsert({
+              where: { name },
+              create: { name },
+              update: {},
+            }),
+          ),
+        )
+      : [];
+
+    const user = await this.prisma.user.create({
       data: {
         email: dto.email,
         name: dto.name,
         password,
+        tags: {
+          create: tags.map((tag) => ({ tagId: tag.id })),
+        },
       },
       select: {
         id: true,
         email: true,
         name: true,
-        access: true,
+        tags: {
+          select: {
+            tag: {
+              select: { name: true },
+            },
+          },
+        },
       },
     });
+
+    return {
+      ...user,
+      tags: user.tags.map((ut) => ut.tag.name),
+    };
   }
 
   async login(dto: LoginDto): Promise<AuthTokensDto> {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
+      include: {
+        tags: {
+          select: {
+            tag: {
+              select: { name: true },
+            },
+          },
+        },
+      },
     });
 
     if (
@@ -65,7 +100,12 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const tokens = this.createTokens(user);
+    const tags = user.tags.map((ut) => ut.tag.name);
+    const tokens = this.createTokens({
+      id: user.id,
+      email: user.email,
+      tags,
+    });
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
 
@@ -87,7 +127,19 @@ export class AuthService {
 
     const storedToken = await this.prisma.refreshToken.findUnique({
       where: { token: refreshToken },
-      include: { user: true },
+      include: {
+        user: {
+          include: {
+            tags: {
+              select: {
+                tag: {
+                  select: { name: true },
+                },
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!storedToken) {
@@ -110,8 +162,14 @@ export class AuthService {
       throw new ForbiddenException('Invalid refresh token');
     }
 
+    const tags = storedToken.user.tags.map((ut) => ut.tag.name);
+
     return {
-      accessToken: this.createAccessToken(storedToken.user),
+      accessToken: this.createAccessToken({
+        id: storedToken.user.id,
+        email: storedToken.user.email,
+        tags,
+      }),
     };
   }
 
@@ -134,7 +192,13 @@ export class AuthService {
         id: true,
         email: true,
         name: true,
-        access: true,
+        tags: {
+          select: {
+            tag: {
+              select: { name: true },
+            },
+          },
+        },
       },
     });
 
@@ -142,10 +206,13 @@ export class AuthService {
       throw new UnauthorizedException('Invalid token');
     }
 
-    return user;
+    return {
+      ...user,
+      tags: user.tags.map((ut) => ut.tag.name),
+    };
   }
 
-  private createTokens(user: { id: number; email: string; access: string }) {
+  private createTokens(user: { id: number; email: string; tags: string[] }) {
     return {
       accessToken: this.createAccessToken(user),
       refreshToken: jwt.sign({ sub: user.id }, JWT_REFRESH_SECRET, {
@@ -157,13 +224,13 @@ export class AuthService {
   private createAccessToken(user: {
     id: number;
     email: string;
-    access: string;
+    tags: string[];
   }) {
     return jwt.sign(
       {
         sub: user.id,
         email: user.email,
-        access: user.access,
+        tags: user.tags,
       },
       JWT_SECRET,
       {

@@ -9,6 +9,14 @@ export class RegisterDto {
 
   @ApiProperty({ example: 'senha-forte-123', minLength: 8 })
   password: string;
+
+  @ApiProperty({
+    example: ['financeiro', 'rh'],
+    required: false,
+    description: 'Tags de acesso do usuário',
+    isArray: true,
+  })
+  tags?: string[];
 }
 
 export class LoginDto {
@@ -36,8 +44,12 @@ export class UserResponseDto {
   @ApiProperty({ type: String, example: 'Henrique Reimao', nullable: true })
   name: string | null;
 
-  @ApiProperty({ type: String, example: 'default' })
-  access: string;
+  @ApiProperty({
+    type: String,
+    isArray: true,
+    example: ['financeiro', 'rh'],
+  })
+  tags: string[];
 }
 
 export class AuthTokensDto {

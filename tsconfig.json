@@ -1,4 +1,5 @@
 {
+  "exclude": ["api", "dist", "node_modules", "prisma"],
   "compilerOptions": {
     "module": "nodenext",
     "moduleResolution": "nodenext",
