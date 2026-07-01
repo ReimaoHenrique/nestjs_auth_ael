@@ -1,10 +1,10 @@
-import { NestFactory } from '@nestjs/core';
-import { ExpressAdapter } from '@nestjs/platform-express';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+const { NestFactory } = require('@nestjs/core');
+const { ExpressAdapter } = require('@nestjs/platform-express');
+const { DocumentBuilder, SwaggerModule } = require('@nestjs/swagger');
 
 let app;
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (!app) {
     const { AppModule } = require('../dist/src/app.module');
 
@@ -36,4 +36,4 @@ export default async function handler(req, res) {
 
   const instance = app.getHttpAdapter().getInstance();
   instance(req, res);
-}
+};
